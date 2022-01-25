@@ -3,11 +3,16 @@ uuid = "a3781013-1dce-456a-8221-84c1660ece91"
 authors = ["Erik Engheim <erik.engheim@mac.com> and contributors"]
 version = "0.1.0"
 
-[extras]
-Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+[deps]
+Gtk = "4c0ca9eb-093a-5379-98c5-f87ac0bbbf44"
+Rockets = "b39edbba-fa67-11e8-3c8a-bb38db7627ae"
+SQLite = "0aa819cd-b072-5ff4-a722-6bc24af294d9"
 
 [compat]
 julia = "1.6"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
 test = ["Test"]

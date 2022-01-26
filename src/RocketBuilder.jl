@@ -1,5 +1,8 @@
 module RocketBuilder
 
-# Write your package code here.
+const datadir = joinpath(@__DIR__, "..", "data")
+
+include("db.jl")
+include("tank-editor.jl")
 
 end

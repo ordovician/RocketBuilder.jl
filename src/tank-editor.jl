@@ -71,6 +71,7 @@ function maketankeditor(db::DBInterface.Connection)
     # Deal with selection and model update
     selection = GAccessor.selection(tree)
     chid = signal_connect(selection, "changed") do widget
+       selection = GAccessor.selection(tree)
        current = selected(selection)
        tankname = list[current, 1]
        tank = findfirsttank(db, tankname)
@@ -87,30 +88,32 @@ function maketankeditor(db::DBInterface.Connection)
     # Adding row
     addid = signal_connect(addbtn, "clicked") do widget
         name = get_gtk_property(nameentry, :text, String)
-        
+
         # Cannot get text as numbers. Need to make that conversion ourselves
         drytxt = get_gtk_property(dryentry, :text, String)
-        totaltxt = get_gtk_property(totalnetry, :text, String)
-        
+        totaltxt = get_gtk_property(totalentry, :text, String)
+
         dry = parse(Float64, drytxt)
         total = parse(Float64, totaltxt)
-        
+
         add_tank!(db, name, Tank(dry, total))
         push!(list, (name,))
     end
     
     # Remove row
     rmid = signal_connect(removebtn, "clicked") do widget
+        selection = GAccessor.selection(tree)
         current = selected(selection)
         tankname = list[current, 1]
         tank = findfirsttank(db, tankname)
-        
+
         if !isnothing(tank)
+            # TODO: This causes a crash. Find safe way of doing this
             deleteat!(list, current)
-            
+
             set_gtk_property!(nameentry, :text, "")
             set_gtk_property!(totalentry, :text, "")
-            set_gtk_property!(dryentry, :text, "")  
+            set_gtk_property!(dryentry, :text, "")
         end
     end
     

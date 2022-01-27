@@ -41,6 +41,14 @@ Notice how you got to write that you want a `String` back. Don't get clever abou
     dry = parse(Float64, drytxt)
     total = parse(Float64, totaltxt
         
+Remember when done with the database to close it:
+
+    db = opendb()
+    
+    # Do a bunch of stuff
+    
+    DBInterface.close!(db)
+        
 ## Tree View
 
 One of the more complex controls in Gtk is the tree view so lets have some remarks on how to use it.

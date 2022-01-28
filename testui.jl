@@ -1,12 +1,16 @@
 #!/usr/local/bin/julia
 
-# NOTE: This doesn't work. Window GUI components don't get shown
-using RocketBuilder
 using Gtk
-using SQLite
 
-db = opendb()
-win = maketankeditor(db)
+win = GtkWindow("Main", 100,50)
+button = GtkButton("Exit")
+push!(win,button)
+
+signal_connect(button, :clicked) do widget
+    Gtk.destroy(win)
+    println("Exit")
+end
+
 
 if !isinteractive()
     cond = Condition()
@@ -14,7 +18,11 @@ if !isinteractive()
         notify(cond)
         DBInterface.close!(db)
     end
-    @async Gtk.gtk_main()
     showall(win)
+    @async Gtk.gtk_main()
     wait(cond)
 end
+
+
+
+

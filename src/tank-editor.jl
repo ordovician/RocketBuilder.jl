@@ -7,12 +7,13 @@ using Rockets
 
 function showtankeditor()
     db = opendb()
-    win = maketankeditor(db)
+    list = liststore(db)        
+    win = maketankeditor(list, db)
     showall(win)
     return win, db
 end
 
-function maketankeditor(db::DBInterface.Connection)
+function maketankeditor(tanklist::GtkListStore, db::DBInterface.Connection)
     win = GtkWindow("Tank Editor", 500, 250)
     
     toplayout = GtkBox(:h)  # :h makes a horizontal layout, :v a vertical layout
@@ -27,9 +28,9 @@ function maketankeditor(db::DBInterface.Connection)
     set_gtk_property!(master_layout,:spacing,10)
     push!(toplayout, master_layout)
     
-    list = liststore(db::DBInterface.Connection)
-    model = GtkTreeModel(list)
+    model = GtkTreeModel(tanklist)
     tree = treeview(model)
+        
     push!(master_layout, tree)
     
     actions_layout = GtkBox(:h)
@@ -71,16 +72,19 @@ function maketankeditor(db::DBInterface.Connection)
     # Deal with selection and model update
     selection = GAccessor.selection(tree)
     chid = signal_connect(selection, "changed") do widget
-       selection = GAccessor.selection(tree)
+    selection = GAccessor.selection(tree)
+    if hasselection(selection)
        current = selected(selection)
-       tankname = list[current, 1]
+       tankname = tanklist[current, 1]
        tank = findfirsttank(db, tankname)
+
        if !isnothing(tank)
             set_gtk_property!(nameentry, :text, tankname)
             set_gtk_property!(totalentry, :text, tank.total_mass)
             set_gtk_property!(dryentry, :text, tank.dry_mass)  
        end
     end
+end
 
     # To disconnect this signal handler later
     # signal_handler_disconnect(selection, chid)
@@ -97,33 +101,38 @@ function maketankeditor(db::DBInterface.Connection)
         total = parse(Float64, totaltxt)
 
         add_tank!(db, name, Tank(dry, total))
-        push!(list, (name,))
+        push!(tanklist, (name,))
     end
     
     # Remove row
     rmid = signal_connect(removebtn, "clicked") do widget
         selection = GAccessor.selection(tree)
-        current = selected(selection)
-        tankname = list[current, 1]
-        tank = findfirsttank(db, tankname)
+        if hasselection(selection)
+            current = selected(selection)
+            tankname = tanklist[current, 1]
+            tank = findfirsttank(db, tankname)
 
-        if !isnothing(tank)
-            # TODO: This causes a crash. Find safe way of doing this
-            deleteat!(list, current)
+            if !isnothing(tank)
+                Gtk.@sigatom begin
+                    deleteat!(tanklist, current)
 
-            set_gtk_property!(nameentry, :text, "")
-            set_gtk_property!(totalentry, :text, "")
-            set_gtk_property!(dryentry, :text, "")
+                    set_gtk_property!(nameentry, :text, "")
+                    set_gtk_property!(totalentry, :text, "")
+                    set_gtk_property!(dryentry, :text, "")
+                end
+            end
         end
     end
     
     
     # Reloading
     reloadid = signal_connect(reloadbtn, "clicked") do widget
-        empty!(list)
-        for name in tanknames(db)
-           push!(list, (name,)) 
-        end        
+        Gtk.@sigatom begin
+            empty!(tanklist)
+            for name in tanknames(db)
+               push!(tanklist, (name,)) 
+            end        
+        end
     end
         
     return win    

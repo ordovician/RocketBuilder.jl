@@ -6,7 +6,14 @@ using Gtk
 using SQLite
 
 db = opendb()
-win = maketankeditor(db)
+
+tanklist = GtkListStore(String)
+
+for name in tanknames(db)
+   push!(tanklist, (name,)) 
+end
+
+win = maketankeditor(tanklist, db)
 
 if !isinteractive()
     cond = Condition()

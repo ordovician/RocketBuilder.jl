@@ -11,6 +11,7 @@ Rockets = "b39edbba-fa67-11e8-3c8a-bb38db7627ae"
 SQLite = "0aa819cd-b072-5ff4-a722-6bc24af294d9"
 
 [compat]
+Gtk = "1"
 julia = "1.6"
 
 [extras]

@@ -64,30 +64,24 @@ detail_layout[2, 3] = totalentry
 set_gtk_property!(detail_layout, :column_spacing, 10)
 set_gtk_property!(detail_layout, :row_spacing, 10)
 
-# Test exiting
-exit_btn = GtkButton("Exit")
-detail_layout[2, 4] = exit_btn
-signal_connect(exit_btn, :clicked) do widget
-    Gtk.destroy(win)
-    println("Exit")
-end
-
 push!(toplayout, detail_layout)
+
 
 # Deal with selection and model update
 selection = GAccessor.selection(tree)
 chid = signal_connect(selection, "changed") do widget
-   selection = GAccessor.selection(tree)
-   if hasselection(selection)
-       current = selected(selection)
-       tankname = tanklist[current, 1]
-       tank = findfirsttank(db, tankname)
-       if !isnothing(tank)
+    selection = GAccessor.selection(tree)
+    if hasselection(selection)
+        current = selected(selection)
+        tankname = tanklist[current, 1]
+        tank = findfirsttank(db, tankname)
+
+        if !isnothing(tank)
             set_gtk_property!(nameentry, :text, tankname)
             set_gtk_property!(totalentry, :text, tank.total_mass)
             set_gtk_property!(dryentry, :text, tank.dry_mass)  
-       end    
-   end
+        end
+    end
 end
 
 # To disconnect this signal handler later
@@ -104,26 +98,28 @@ addid = signal_connect(addbtn, "clicked") do widget
     dry = parse(Float64, drytxt)
     total = parse(Float64, totaltxt)
 
-    Gtk.@sigatom begin
-        add_tank!(db, name, Tank(dry, total))
-        push!(tanklist, (name,))
-    end
+    add_tank!(db, name, Tank(dry, total))
+    push!(tanklist, (name,))
 end
 
 # Remove row
 rmid = signal_connect(removebtn, "clicked") do widget
     selection = GAccessor.selection(tree)
-    current = selected(selection)
-    tankname = tanklist[current, 1]
-    tank = findfirsttank(db, tankname)
+    if hasselection(selection)
+        current = selected(selection)
+        tankname = tanklist[current, 1]
+        tank = findfirsttank(db, tankname)
 
-    if !isnothing(tank)
-        Gtk.@sigatom begin
-            deleteat!(tanklist, current)
+        if !isnothing(tank)
+            # Put on this on main GUI task. I think.
+            # GUI stuff cannot be run on other tasks 
+            Gtk.@sigatom begin
+                deleteat!(tanklist, current)
 
-            set_gtk_property!(nameentry, :text, "")
-            set_gtk_property!(totalentry, :text, "")
-            set_gtk_property!(dryentry, :text, "")
+                set_gtk_property!(nameentry, :text, "")
+                set_gtk_property!(totalentry, :text, "")
+                set_gtk_property!(dryentry, :text, "")
+            end
         end
     end
 end
@@ -135,7 +131,7 @@ reloadid = signal_connect(reloadbtn, "clicked") do widget
         empty!(tanklist)
         for name in tanknames(db)
            push!(tanklist, (name,)) 
-        end
+        end        
     end
 end
 

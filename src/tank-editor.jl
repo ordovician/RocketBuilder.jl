@@ -1,4 +1,4 @@
-export maketankeditor, showtankeditor, liststore, treeview
+export maketankeditor, showtankeditor, tank_liststore, treeview
 
 using SQLite
 using DataFrames
@@ -7,7 +7,7 @@ using Rockets
 
 function showtankeditor()
     db = opendb()
-    list = liststore(db)        
+    list = tank_liststore(db)        
     win = maketankeditor(list, db)
     showall(win)
     return win, db
@@ -72,20 +72,20 @@ function maketankeditor(tanklist::GtkListStore, db::DBInterface.Connection)
     # Deal with selection and model update
     selection = GAccessor.selection(tree)
     chid = signal_connect(selection, "changed") do widget
-    selection = GAccessor.selection(tree)
-    if hasselection(selection)
-       current = selected(selection)
-       tankname = tanklist[current, 1]
-       tank = findfirsttank(db, tankname)
+        selection = GAccessor.selection(tree)
+        if hasselection(selection)
+            current = selected(selection)
+            tankname = tanklist[current, 1]
+            tank = findfirsttank(db, tankname)
 
-       if !isnothing(tank)
-            set_gtk_property!(nameentry, :text, tankname)
-            set_gtk_property!(totalentry, :text, tank.total_mass)
-            set_gtk_property!(dryentry, :text, tank.dry_mass)  
-       end
+            if !isnothing(tank)
+                set_gtk_property!(nameentry, :text, tankname)
+                set_gtk_property!(totalentry, :text, tank.total_mass)
+                set_gtk_property!(dryentry, :text, tank.dry_mass)  
+            end
+        end
     end
-end
-
+    
     # To disconnect this signal handler later
     # signal_handler_disconnect(selection, chid)
     
@@ -113,6 +113,8 @@ end
             tank = findfirsttank(db, tankname)
 
             if !isnothing(tank)
+                # Put on this on main GUI task. I think.
+                # GUI stuff cannot be run on other tasks 
                 Gtk.@sigatom begin
                     deleteat!(tanklist, current)
 
@@ -138,7 +140,7 @@ end
     return win    
 end
 
-function liststore(db::DBInterface.Connection)
+function tank_liststore(db::DBInterface.Connection)
     list = GtkListStore(String)
     
     for name in tanknames(db)

@@ -1,5 +1,6 @@
 export opendb
 export load_tanks, add_tank!, findalltanks, findfirsttank, tanknames
+export load_engines
 
 using SQLite
 using DataFrames
@@ -17,6 +18,22 @@ end
 # path = joinpath(datadir, "rockets.db")
 # db = SQLite.DB(path)
 # DataFrame(DBInterface.execute(db, "SELECT * FROM Tanks"))
+
+
+"""
+    load_tanks() -> DataFrame
+Load tank data as a data frame from data/rockets.db SQLite database
+"""
+function load_engines()
+    path = joinpath(datadir, "rockets.db")
+    db = SQLite.DB(path)
+    
+    query = DBInterface.prepare(db, "SELECT * FROM Engines")
+    df = DBInterface.execute(query) |> DataFrame
+    
+    DBInterface.close!(db)  # close database for further interaction
+    return df
+end
 
 
 """

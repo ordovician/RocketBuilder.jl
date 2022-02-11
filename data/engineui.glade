@@ -40,29 +40,173 @@
                                         </child>
                                     </object>
                                 </child>
+                            </object>
+                        </child>
+                        <child>
+                            <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
+                                <property name="margin_left">6</property>
+                                <property name="margin_top">6</property>
+                                <property name="spacing">10</property>
                                 <child>
-                                    <object class="GtkBox">
-                                        <property name="orientation">horizontal</property>
-                                        <property name="margin_left">6</property>
-                                        <property name="margin_top">6</property>
-                                        <property name="spacing">10</property>
-                                        <child>
-                                            <object class="GtkButton" id="add">
-                                                <property name="label">Add</property>
-                                            </object>
-                                        </child>
-                                        <child>
-                                            <object class="GtkButton" id="remove">
-                                                <property name="label">Remove</property>
-                                            </object>
-                                        </child>
+                                    <object class="GtkButton" id="add">
+                                        <property name="label">Add</property>
+                                    </object>
+                                </child>
+                                <child>
+                                    <object class="GtkButton" id="remove">
+                                        <property name="label">Remove</property>
                                     </object>
                                 </child>
                             </object>
                         </child>
                     </object>
                 </child>
+                <child>
+                  <object class="GtkGrid">
+                      <property name="valign">start</property>
+                      <property name="margin_left">30</property>
+                      <property name="margin_top">10</property>
+                      <property name="row_spacing">5</property>
+                      <property name="column_spacing">5</property>
+                      
+                      <child>
+                        <object class="GtkLabel">
+                          <property name="halign">start</property>
+                          <property name="label">Name:</property>
+                        </object>
+                        <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                        </packing>  
+                      </child>
+                      
+                      <child>
+                        <object class="GtkEntry" id="engine_name">
+                          <property name="width_chars">12</property>
+                          <property name="input_purpose">text</property>
+                        </object> 
+                        <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">0</property>
+                        </packing> 
+                      </child>
+                      
+                      <child>
+                        <object class="GtkLabel">
+                          <property name="halign">start</property>
+                          <property name="label">Mass:</property>
+                        </object>
+                        <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">1</property>
+                        </packing>  
+                      </child>
+                      
+                      
+                      <child>
+                        <object class="GtkEntry" id="mass">
+                          <property name="width_chars">5</property>
+                          <property name="input_purpose">number</property>
+                        </object> 
+                        <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">1</property>
+                        </packing> 
+                      </child>
+                      
+                      <child>
+                        <object class="GtkLabel">
+                          <property name="halign">start</property>
+                          <property name="label">Thrust SL:</property>
+                        </object>
+                        <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">2</property>
+                        </packing>  
+                      </child>
+                      
+                      <child>
+                        <object class="GtkEntry" id="thrust_sl">
+                          <property name="width_chars">5</property>
+                          <property name="input_purpose">number</property>
+                        </object> 
+                        <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">2</property>
+                        </packing> 
+                      </child>                      
+                      
+                      <child>
+                        <object class="GtkLabel">
+                          <property name="halign">start</property>
+                          <property name="label">Thrust Vac:</property>
+                        </object>
+                        <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">3</property>
+                        </packing>  
+                      </child>
+                      
+                      <child>
+                        <object class="GtkEntry" id="thrust_vac">
+                          <property name="width_chars">5</property>
+                          <property name="input_purpose">number</property>
+                        </object> 
+                        <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">3</property>
+                        </packing> 
+                      </child>
+                      
+                      <child>
+                        <object class="GtkLabel">
+                          <property name="halign">start</property>
+                          <property name="label">Isp SL:</property>
+                        </object>
+                        <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">4</property>
+                        </packing>  
+                      </child>
+                      
+                      <child>
+                        <object class="GtkEntry" id="isp_sl">
+                          <property name="width_chars">5</property>
+                          <property name="input_purpose">number</property>
+                        </object> 
+                        <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">4</property>
+                        </packing> 
+                      </child>
+                      
+                      <child>
+                        <object class="GtkLabel">
+                          <property name="halign">start</property>
+                          <property name="label">Isp Vac:</property>
+                        </object>
+                        <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">5</property>
+                        </packing>  
+                      </child> 
+                      
+                      <child>
+                        <object class="GtkEntry" id="isp_vac">
+                          <property name="width_chars">5</property>
+                          <property name="input_purpose">number</property>
+                        </object> 
+                        <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">5</property>
+                        </packing> 
+                      </child>                                                              
+                      
+                  </object>
+                </child>
             </object>
         </child>
     </object>
 </interface>
+

@@ -4,6 +4,12 @@
 
 A package for educational use. It is mainly for creating a Gtk3 GUI for manipulating objects created in the Rockets package.
 
+## GTK Resources
+While developing a GTK application, these are useful resources
+
+- [Widget](https://docs.gtk.org/gtk3/visual_index.html) - Visual overview over GTK3 widgets.
+- [GtkBuilder](https://docs.gtk.org/gtk3/class.Builder.html) - Used to load `.glade` UI design files.
+
 ## Data
 Under the `data` directory we have `rockets.sql` which contains SQL statements needed to create the `rockets.db` SQLite3 database.
 

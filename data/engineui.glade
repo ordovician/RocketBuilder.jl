@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+    <requires lib="gtk+" version="3.20"/>
+    <object class="GtkListStore" id="enginestore">
+        <columns>
+            <column type="gchararray"/>
+        </columns>
+        <data>
+            <row>
+                <col id="0">Rutherford</col>
+            </row>
+            <row>
+                <col id="0">Curie</col>
+            </row>
+        </data>
+    </object>
+    <object class="GtkWindow" id="enginewin">
+        <property name="can_focus">False</property>
+        <child>
+            <object class="GtkBox" id="top">
+                <property name="orientation">horizontal</property>
+                <property name="margin_left">10</property>
+                <property name="margin_top">10</property>
+                <property name="spacing">10</property>
+                <child>
+                    <object class="GtkBox" id="master">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">10</property>
+                        <child>
+                            <object class="GtkTreeView" id="enginelist">
+                                <property name="model">enginestore</property>
+                                <child>
+                                    <object class="GtkTreeViewColumn">
+                                        <property name="title">Engine</property>
+                                        <child>
+                                            <object class="GtkCellRendererText"/>
+                                            <attributes>
+                                                <attribute name="text">0</attribute>
+                                            </attributes>
+                                        </child>
+                                    </object>
+                                </child>
+                                <child>
+                                    <object class="GtkBox">
+                                        <property name="orientation">horizontal</property>
+                                        <property name="margin_left">6</property>
+                                        <property name="margin_top">6</property>
+                                        <property name="spacing">10</property>
+                                        <child>
+                                            <object class="GtkButton" id="add">
+                                                <property name="label">Add</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="GtkButton" id="remove">
+                                                <property name="label">Remove</property>
+                                            </object>
+                                        </child>
+                                    </object>
+                                </child>
+                            </object>
+                        </child>
+                    </object>
+                </child>
+            </object>
+        </child>
+    </object>
+</interface>

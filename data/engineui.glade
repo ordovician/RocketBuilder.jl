@@ -58,6 +58,11 @@
                                         <property name="label">Remove</property>
                                     </object>
                                 </child>
+                                <child>
+                                    <object class="GtkButton" id="reload">
+                                        <property name="label">Reload</property>
+                                    </object>
+                                </child>
                             </object>
                         </child>
                     </object>

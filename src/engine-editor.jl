@@ -27,6 +27,9 @@ function make_engine_editor(egndata::DataFrame)
     isp_sl_entry = builder["isp_sl"];
     isp_vac_entry = builder["isp_vac"];
     
+    addbtn = builder["add"];
+    removebtn = builder["remove"];
+    reloadbtn = builder["reload"];
     
     # Deal with selection and model update
     selection = GAccessor.selection(enginelistview)
@@ -49,7 +52,45 @@ function make_engine_editor(egndata::DataFrame)
         end
     end
     
+    # Adding row
+    addid = signal_connect(addbtn, "clicked") do widget
+        name = get_gtk_property(enginename_entry, :text, String)
+
+        # Cannot get text as numbers. Need to make that conversion ourselves
+        enginename = get_gtk_property(enginename_entry, :text, String)
+        masstxt = get_gtk_property(mass_entry, :text, String)
+        thrust_sltxt = get_gtk_property(thrust_sl_entry, :text, String)
+        thrust_vactxt = get_gtk_property(thrust_vac_entry, :text, String)
+        isp_sltxt = get_gtk_property(isp_sl_entry, :text, String)
+        isp_vactxt = get_gtk_property(isp_vac_entry, :text, String)
+        
+        mass = parse(Float64, masstxt)
+        thrust_sl = parse(Float64, thrust_sltxt)
+        thrust_vac = parse(Float64, thrust_vactxt)
+        isp_sl = parse(Float64, isp_sltxt)
+        isp_vac = parse(Float64, isp_vactxt)
+ 
+        push!(egndata, (
+            Engine = enginename,
+            Mass = mass,
+            ThrustSL = thrust_sl,
+            ThrustVac = thrust_vac,
+            IspSL = isp_sl,
+            IspVac = isp_vac
+        ))
+        
+        push!(enginestore, (name,))
+    end
     
+    # Reloading
+    reloadid = signal_connect(reloadbtn, "clicked") do widget
+        Gtk.@sigatom begin
+            empty!(enginestore)
+            for name in egndata.Engine
+               push!(enginestore, (name,)) 
+            end        
+        end
+    end
 
     showall(w)
     return win    

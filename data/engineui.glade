@@ -16,11 +16,14 @@
     </object>
     <object class="GtkWindow" id="enginewin">
         <property name="can_focus">False</property>
+        <property name="title">Engine editor</property>        
         <child>
             <object class="GtkBox" id="top">
                 <property name="orientation">horizontal</property>
                 <property name="margin_left">10</property>
                 <property name="margin_top">10</property>
+                <property name="margin_right">10</property>
+                <property name="margin_bottom">10</property>
                 <property name="spacing">10</property>
                 <child>
                     <object class="GtkBox" id="master">
@@ -29,6 +32,8 @@
                         <child>
                             <object class="GtkTreeView" id="enginelist">
                                 <property name="model">enginestore</property>
+                                <property name="hexpand">True</property>
+                                <property name="vexpand">True</property>
                                 <child>
                                     <object class="GtkTreeViewColumn">
                                         <property name="title">Engine</property>
@@ -48,21 +53,31 @@
                                 <property name="margin_left">6</property>
                                 <property name="margin_top">6</property>
                                 <property name="spacing">10</property>
+                                
                                 <child>
                                     <object class="GtkButton" id="add">
                                         <property name="label">Add</property>
                                     </object>
                                 </child>
+                                
                                 <child>
                                     <object class="GtkButton" id="remove">
                                         <property name="label">Remove</property>
                                     </object>
                                 </child>
+                                
                                 <child>
                                     <object class="GtkButton" id="reload">
                                         <property name="label">Reload</property>
                                     </object>
                                 </child>
+                                                                
+                                <child>
+                                    <object class="GtkButton" id="save">
+                                        <property name="label">Save</property>
+                                    </object>
+                                </child>
+                                
                             </object>
                         </child>
                     </object>
@@ -89,7 +104,6 @@
                       <child>
                         <object class="GtkEntry" id="engine_name">
                           <property name="width_chars">12</property>
-                          <property name="input_purpose">text</property>
                         </object> 
                         <packing>
                             <property name="left_attach">1</property>

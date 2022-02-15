@@ -18,7 +18,10 @@ function make_engine_editor(enginesdata::DataFrame)
     w = builder["enginewin"]; 
 
     enginelistview = builder["enginelist"];
+    
+    # Will get some dummy data, we will immediately replace
     enginestore = builder["enginestore"];
+    updatestore!(enginestore, enginesdata)
     
     enginename_entry = builder["engine_name"];
     mass_entry = builder["mass"];
@@ -30,6 +33,7 @@ function make_engine_editor(enginesdata::DataFrame)
     addbtn = builder["add"];
     removebtn = builder["remove"];
     reloadbtn = builder["reload"];
+    savebtn = builder["save"];
     
     # Deal with selection and model update
     selection = GAccessor.selection(enginelistview)
@@ -82,16 +86,64 @@ function make_engine_editor(enginesdata::DataFrame)
         push!(enginestore, (name,))
     end
     
+    rmid = signal_connect(removebtn, "clicked") do widget
+        if hasselection(selection)
+            current = selected(selection)
+            enginename = enginestore[current, 1]
+
+            i = findfirst(==(enginename), enginesdata.Engine)
+
+            if !isnothing(i)
+                # Remove from DataFrame
+                deleteat!(enginesdata, i)
+                                     
+                # Put on this on main GUI task. I think.
+                # GUI stuff cannot be run on other tasks 
+                Gtk.@sigatom begin
+                    deleteat!(enginestore, current)
+
+                    set_gtk_property!(enginename_entry, :text, "")
+                    set_gtk_property!(mass_entry, :text, "")
+                    set_gtk_property!(thrust_sl_entry, :text, "")
+                    set_gtk_property!(thrust_vac_entry, :text, "")
+                    set_gtk_property!(isp_sl_entry, :text, "")
+                    set_gtk_property!(isp_vac_entry, :text, "")
+                    
+                    display(enginesdata)
+                end
+            end
+        end
+    end
+    
     # Reloading
     reloadid = signal_connect(reloadbtn, "clicked") do widget
         Gtk.@sigatom begin
-            empty!(enginestore)
-            for name in enginesdata.Engine
-               push!(enginestore, (name,)) 
-            end        
+            updatestore!(enginestore, enginesdata)      
         end
+    end
+    
+    saveid = signal_connect(savebtn, "clicked") do widget
+        # This is just to demonstrate different ways of working
+        # It is not ideal to  delete a whole table and then add all the data
+        path = joinpath(datadir, "rockets.db")
+        db = SQLite.DB(path)   
+        
+        stmt = SQLite.drop!(db, "Engines", ifexists = true)                
+
+        # Create Engines table from scratch by loading data
+        # from DataFrame
+        SQLite.load!(enginesdata, db, "Engines")
+        
+        DBInterface.close!(db)
     end
 
     showall(w)
-    return win    
+    return w    
+end
+
+function updatestore!(enginestore::GtkListStore, enginesdata::DataFrame)
+    empty!(enginestore)
+    for name in enginesdata.Engine
+       push!(enginestore, (name,)) 
+    end  
 end

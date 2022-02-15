@@ -5,6 +5,11 @@ using DataFrames
 using Gtk
 using Rockets
 
+"""
+    show_engine_editor
+
+Show GTK window with engine data by loading database in `data/rockets.db`.
+"""
 function show_engine_editor()
     enginesdata = load_engines()
     win = make_engine_editor(enginesdata)
@@ -12,6 +17,11 @@ function show_engine_editor()
     return win, db
 end
 
+"""
+    make_engine_editor(enginesdata::DataFrame)
+
+Show GTK window with engine data stored in `enginesdata`.
+"""
 function make_engine_editor(enginesdata::DataFrame)
     path = "data/engineui.glade"
     builder = GtkBuilder(filename=path); 
@@ -56,7 +66,8 @@ function make_engine_editor(enginesdata::DataFrame)
         end
     end
     
-    # Adding row
+    # Adding row. Note we keep ID (addid) in case we copy paste this into REPL
+    # Allows you to disconnect: signal_handler_disconnect(addbtn, addid)
     addid = signal_connect(addbtn, "clicked") do widget
         name = get_gtk_property(enginename_entry, :text, String)
 
@@ -128,6 +139,8 @@ function make_engine_editor(enginesdata::DataFrame)
         path = joinpath(datadir, "rockets.db")
         db = SQLite.DB(path)   
         
+        # Remove table Engines. Don't throw exception if the table
+        # is not there (ifexists=true).
         stmt = SQLite.drop!(db, "Engines", ifexists = true)                
 
         # Create Engines table from scratch by loading data
@@ -141,6 +154,7 @@ function make_engine_editor(enginesdata::DataFrame)
     return w    
 end
 
+"Put engine names in `enginesdata` into  `enginestore` used by tree view"
 function updatestore!(enginestore::GtkListStore, enginesdata::DataFrame)
     empty!(enginestore)
     for name in enginesdata.Engine

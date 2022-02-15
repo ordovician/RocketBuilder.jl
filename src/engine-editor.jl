@@ -12,7 +12,7 @@ function show_engine_editor()
     return win, db
 end
 
-function make_engine_editor(egndata::DataFrame)
+function make_engine_editor(enginesdata::DataFrame)
     path = "data/engineui.glade"
     builder = GtkBuilder(filename=path); 
     w = builder["enginewin"]; 
@@ -70,7 +70,7 @@ function make_engine_editor(egndata::DataFrame)
         isp_sl = parse(Float64, isp_sltxt)
         isp_vac = parse(Float64, isp_vactxt)
  
-        push!(egndata, (
+        push!(enginesdata, (
             Engine = enginename,
             Mass = mass,
             ThrustSL = thrust_sl,
@@ -86,7 +86,7 @@ function make_engine_editor(egndata::DataFrame)
     reloadid = signal_connect(reloadbtn, "clicked") do widget
         Gtk.@sigatom begin
             empty!(enginestore)
-            for name in egndata.Engine
+            for name in enginesdata.Engine
                push!(enginestore, (name,)) 
             end        
         end

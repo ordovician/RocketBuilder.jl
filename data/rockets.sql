@@ -25,7 +25,7 @@ CREATE TABLE Engines (
 CREATE TABLE Rockets (
     RocketID INT PRIMARY KEY,
     Rocket TEXT,
-    Tank TEXT REFERENCES Tanks(Tank) ON UPDATE CASCADE
+    Tank TEXT REFERENCES Tanks(Tank) ON UPDATE CASCADE,
     Engine TEXT REFERENCES Engines(Engine) ON UPDATE CASCADE
 );
 

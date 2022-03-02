@@ -14,7 +14,7 @@ function show_engine_editor()
     enginesdata = load_engines()
     win = make_engine_editor(enginesdata)
     showall(win)
-    return win, db
+    return win
 end
 
 """
@@ -23,7 +23,7 @@ end
 Show GTK window with engine data stored in `enginesdata`.
 """
 function make_engine_editor(enginesdata::DataFrame)
-    path = "data/engineui.glade"
+    path =     path = joinpath(datadir, "engineui.glade")
     builder = GtkBuilder(filename=path); 
     w = builder["enginewin"]; 
 
